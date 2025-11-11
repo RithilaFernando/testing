@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add to Google Calendar Demo</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .event-card {
+      background: white;
+      padding: 2.5rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      max-width: 500px;
+      text-align: center;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #222;
+    }
+
+    p {
+      color: #555;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    .date {
+      color: #777;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #34A853, #0F9D58);
+      color: white;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 6px 12px rgba(15, 157, 88, 0.3);
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #2c8f46, #0c7a4b);
+      box-shadow: 0 8px 16px rgba(15, 157, 88, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .success {
+      margin-top: 1rem;
+      color: #34A853;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .show {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="event-card">
+    <h1>Annual Tech Expo 2025</h1>
+    <div class="date">📅 November 25, 2025 — 10:00 AM to 4:00 PM</div>
+    <p>Join us for a day of innovation, workshops, and networking with industry leaders.</p>
+    <p>📍 Colombo, Sri Lanka</p>
+
+    <a id="googleCalBtn" class="btn" target="_blank">🗓 Add to Google Calendar</a>
+    <div class="success" id="successMsg">✅ Opening Google Calendar...</div>
+  </div>
+
+  <script>
+    // Dummy event data
+    const title = "Annual Tech Expo 2025";
+    const details = "Join us for a day of innovation, workshops, and networking with industry leaders.";
+    const location = "Colombo, Sri Lanka";
+    const start = "20251125T100000";
+    const end = "20251125T160000";
+
+    // Create Google Calendar link
+    const googleLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&dates=${start}/${end}`;
+    const googleBtn = document.getElementById("googleCalBtn");
+    googleBtn.href = googleLink;
+
+    // Show success message briefly
+    googleBtn.addEventListener("click", () => {
+      const msg = document.getElementById("successMsg");
+      msg.classList.add("show");
+      setTimeout(() => msg.classList.remove("show"), 2500);
+    });
+  </script>
+</body>
+</html>
