@@ -1,121 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Add to Google Calendar Demo</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Event - Add to Calendar Test</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-    body {
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+    :root{--bg1:#f4fbf8;--card:#fff;--accent:#007bff;--green:#34A853;}
+    body{
+      font-family:"Poppins",sans-serif;
+      background: linear-gradient(135deg,#eaf7ff,#f7fcf9);
+      margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
     }
-
-    .event-card {
-      background: white;
-      padding: 2.5rem 3rem;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      max-width: 500px;
-      text-align: center;
-      animation: fadeIn 0.8s ease-in-out;
+    .card{
+      width:100%;max-width:640px;background:var(--card);border-radius:18px;padding:28px;box-shadow:0 12px 30px rgba(18,38,63,0.08);
+      text-align:left;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    h1{margin:0 0 6px 0;font-size:1.4rem;color:#10203a}
+    .meta{color:#556;border-radius:10px;padding:8px 12px;background:#fbfdff;display:inline-block;margin-bottom:12px}
+    p{color:#334;margin:6px 0 16px 0}
+    .actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;text-decoration:none;
+      font-weight:600;font-size:0.95rem;color:#fff;
+      box-shadow:0 8px 18px rgba(2,80,200,0.12);
     }
-
-    h1 {
-      font-size: 1.8rem;
-      color: #222;
-    }
-
-    p {
-      color: #555;
-      margin: 0.5rem 0 1.5rem;
-    }
-
-    .date {
-      color: #777;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-    }
-
-    .btn {
-      display: inline-block;
-      background: linear-gradient(135deg, #34A853, #0F9D58);
-      color: white;
-      border: none;
-      padding: 0.9rem 1.8rem;
-      border-radius: 50px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 6px 12px rgba(15, 157, 88, 0.3);
-      text-decoration: none;
-    }
-
-    .btn:hover {
-      background: linear-gradient(135deg, #2c8f46, #0c7a4b);
-      box-shadow: 0 8px 16px rgba(15, 157, 88, 0.4);
-      transform: translateY(-2px);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .success {
-      margin-top: 1rem;
-      color: #34A853;
-      font-weight: 600;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-
-    .show {
-      opacity: 1;
-    }
+    .btn-ics{background:linear-gradient(135deg,var(--accent),#00aaff)}
+    .btn-gcal{background:linear-gradient(135deg,var(--green),#0f9d58);box-shadow:0 8px 18px rgba(52,168,83,0.12)}
+    .note{font-size:0.9rem;color:#5b6b78;margin-top:12px}
+    .small{font-size:0.85rem;color:#667}
+    .success{color:var(--green);font-weight:600;margin-left:8px;opacity:0;transition:opacity .25s}
+    .show{opacity:1}
   </style>
 </head>
-
 <body>
-  <div class="event-card">
+  <div class="card">
     <h1>Annual Tech Expo 2025</h1>
-    <div class="date">📅 November 25, 2025 — 10:00 AM to 4:00 PM</div>
-    <p>Join us for a day of innovation, workshops, and networking with industry leaders.</p>
-    <p>📍 Colombo, Sri Lanka</p>
+    <div class="meta">📍 Colombo, Sri Lanka — 1 venue</div>
+    <p>Join us for a day of innovation, workshops, and networking with industry leaders. Expect talks, hands-on demos and career booths.</p>
 
-    <a id="googleCalBtn" class="btn" target="_blank">🗓 Add to Google Calendar</a>
-    <div class="success" id="successMsg">✅ Opening Google Calendar...</div>
+    <div class="row actions">
+      <button id="downloadIcs" class="btn btn-ics" type="button">📥 Download .ICS (All Calendars)</button>
+      <a id="openGCal" class="btn btn-gcal" target="_blank" rel="noopener">🗓 Add to Google Calendar</a>
+      <span id="msg" class="success">✅ Opening...</span>
+    </div>
+
+    <div class="note">
+      <div class="small">Test info: <strong>Nov 25, 2025</strong> — 10:00 AM to 4:00 PM (local time).</div>
+      <div class="small">Tip: Use the ICS if you want the event in Apple/Outlook or other calendar apps. Use Google button to open Google Calendar directly.</div>
+    </div>
   </div>
 
   <script>
-    // Dummy event data
-    const title = "Annual Tech Expo 2025";
-    const details = "Join us for a day of innovation, workshops, and networking with industry leaders.";
-    const location = "Colombo, Sri Lanka";
-    const start = "20251125T100000";
-    const end = "20251125T160000";
+    // ---------- Dummy event data (edit these if you want) ----------
+    const event = {
+      title: "Annual Tech Expo 2025",
+      description: "Join us for a day of innovation, workshops, and networking with industry leaders.",
+      location: "Colombo, Sri Lanka",
+      // IMPORTANT: define event start and end in local time using Date(year, monthIndex, day, hour, minute)
+      // monthIndex is 0-based (10 = November)
+      startLocal: new Date(2025, 10, 25, 10, 0, 0),
+      endLocal:   new Date(2025, 10, 25, 16, 0, 0)
+    };
 
-    // Create Google Calendar link
-    const googleLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&dates=${start}/${end}`;
-    const googleBtn = document.getElementById("googleCalBtn");
-    googleBtn.href = googleLink;
+    // ---------- Helpers ----------
+    function toUTCDateTimeString(d){
+      // returns YYYYMMDDTHHMMSSZ (UTC)
+      const iso = d.toISOString(); // e.g. 2025-11-25T04:00:00.000Z
+      return iso.replace(/[-:]/g, '').split('.')[0] + 'Z';
+    }
 
-    // Show success message briefly
-    googleBtn.addEventListener("click", () => {
-      const msg = document.getElementById("successMsg");
-      msg.classList.add("show");
-      setTimeout(() => msg.classList.remove("show"), 2500);
+    function escapeICSText(s){
+      return String(s)
+        .replace(/\\/g, '\\\\')
+        .replace(/;/g, '\\;')
+        .replace(/,/g, '\\,')
+        .replace(/\n/g, '\\n');
+    }
+
+    function uid(){
+      return 'uid-' + Date.now() + '-' + Math.random().toString(36).slice(2,9);
+    }
+
+    // ---------- Build ICS content ----------
+    function buildICS(ev){
+      const dtstamp = toUTCDateTimeString(new Date());
+      const dtstart = toUTCDateTimeString(ev.startLocal);
+      const dtend   = toUTCDateTimeString(ev.endLocal);
+      const uidVal  = uid();
+
+      // Basic ICS with UID, DTSTAMP, DTSTART, DTEND, SUMMARY, DESCRIPTION, LOCATION
+      const lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//YourCompany//EventReminders//EN",
+        "CALSCALE:GREGORIAN",
+        "BEGIN:VEVENT",
+        `UID:${uidVal}`,
+        `DTSTAMP:${dtstamp}`,
+        `DTSTART:${dtstart}`,
+        `DTEND:${dtend}`,
+        `SUMMARY:${escapeICSText(ev.title)}`,
+        `DESCRIPTION:${escapeICSText(ev.description)}`,
+        `LOCATION:${escapeICSText(ev.location)}`,
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ];
+      return lines.join("\r\n");
+    }
+
+    // ---------- Create blob and trigger download ----------
+    function downloadICS(ev){
+      const ics = buildICS(ev);
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      // safe filename
+      const filename = (ev.title || 'event').replace(/[^a-z0-9_\- ]/ig, '').replace(/\s+/g, '_') + '_reminder.ics';
+      a.download = filename;
+      // append to DOM in case browser needs it
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        a.remove();
+      }, 1500);
+    }
+
+    // ---------- Build Google Calendar link ----------
+    function buildGoogleLink(ev){
+      // Google accepts dates in UTC format like 20251125T100000Z
+      const startUTC = toUTCDateTimeString(ev.startLocal);
+      const endUTC   = toUTCDateTimeString(ev.endLocal);
+
+      const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: ev.title,
+        details: ev.description,
+        location: ev.location,
+        dates: `${startUTC}/${endUTC}`
+      });
+      return 'https://calendar.google.com/calendar/render?' + params.toString();
+    }
+
+    // ---------- Wire buttons ----------
+    const btnIcs = document.getElementById('downloadIcs');
+    const linkG  = document.getElementById('openGCal');
+    const msg    = document.getElementById('msg');
+
+    // Set google link href
+    linkG.href = buildGoogleLink(event);
+
+    btnIcs.addEventListener('click', () => {
+      downloadICS(event);
+      // show short feedback
+      msg.textContent = '✅ .ICS downloaded / ready to open';
+      msg.classList.add('show');
+      setTimeout(()=> msg.classList.remove('show'), 3000);
+    });
+
+    linkG.addEventListener('click', () => {
+      // show quick feedback (Google may prompt for login if not signed in)
+      msg.textContent = '✅ Opening Google Calendar...';
+      msg.classList.add('show');
+      setTimeout(()=> msg.classList.remove('show'), 3000);
     });
   </script>
 </body>
