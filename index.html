@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Reminder Demo</title>
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .event-card {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 500px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    p {
+      color: #555;
+      margin: 0.5rem 0 1.5rem;
+    }
+
+    button {
+      background: linear-gradient(135deg, #007bff, #00aaff);
+      color: white;
+      border: none;
+      padding: 0.9rem 1.5rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #0056d6, #0088cc);
+      box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .date {
+      color: #777;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="event-card">
+    <h1>Annual Tech Expo 2025</h1>
+    <div class="date">📅 November 25, 2025 — 10:00 AM to 4:00 PM</div>
+    <p>Join us for a day of innovation, workshops, and networking with industry leaders.</p>
+    <p>📍 Colombo, Sri Lanka</p>
+    <button id="reminderBtn">Set Reminder</button>
+  </div>
+
+  <script>
+    document.getElementById("reminderBtn").addEventListener("click", () => {
+      // Dummy event data
+      const title = "Annual Tech Expo 2025";
+      const description = "Join us for a day of innovation, workshops, and networking with industry leaders.";
+      const location = "Colombo, Sri Lanka";
+      const startDate = "2025-11-25T10:00:00";
+      const endDate = "2025-11-25T16:00:00";
+
+      // Convert to ICS date format (YYYYMMDDTHHMMSSZ)
+      const formatDate = (d) => d.replace(/[-:]/g, "").split(".")[0] + "Z";
+
+      const icsContent = `
+BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:${title}
+DESCRIPTION:${description}
+DTSTART:${formatDate(startDate)}
+DTEND:${formatDate(endDate)}
+LOCATION:${location}
+END:VEVENT
+END:VCALENDAR`;
+
+      // Create and download the .ics file
+      const blob = new Blob([icsContent.trim()], { type: "text/calendar;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${title.replace(/\s+/g, "_")}_reminder.ics`;
+      link.click();
+    });
+  </script>
+</body>
+</html>
